@@ -1,0 +1,29 @@
+{
+  "fetched_at_utc": "2026-05-02T19:21:15.463220+00:00",
+  "sources": {
+    "ennead": {
+      "codes": {
+        "genshin": "https://api.ennead.cc/mihoyo/genshin/codes",
+        "starrail": "https://api.ennead.cc/mihoyo/starrail/codes"
+      },
+      "calendar": {
+        "genshin": "https://api.ennead.cc/mihoyo/genshin/calendar",
+        "starrail": "https://api.ennead.cc/mihoyo/starrail/calendar"
+      }
+    },
+    "crimson_witch": {
+      "codes": {
+        "genshin": "https://www.crimsonwitch.com/codes/Genshin_Impact",
+        "starrail": "https://www.crimsonwitch.com/codes/Honkai_Star_Rail"
+      }
+    }
+  },
+  "extraction_method": "Fetch Ennead JSON endpoints for codes and calendars, then parse Crimson Witch embedded self.__next_f.push() payloads for code enrichment and scheduled codes.",
+  "notes": [
+    "All sources used by this scraper are unofficial community-maintained sources.",
+    "Crimson Witch code metadata is extracted from embedded Next.js flight payload data, not a documented public JSON endpoint.",
+    "Genshin and Star Rail outputs include direct official redemption URLs for each normalized code.",
+    "Output timestamps were emitted in UTC and the requested timezone 'UTC'.",
+    "If either source adds stronger bot protection later, a browser-backed fallback may be needed."
+  ]
+}
