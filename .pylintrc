@@ -1,0 +1,15 @@
+[MAIN]
+persistent = no
+
+[MESSAGES CONTROL]
+disable =
+    C0114,
+    C0115,
+    C0116,
+    C0302,
+    R0911,
+    R0912,
+    R0914,
+    R0915,
+    R0801,
+    W0703

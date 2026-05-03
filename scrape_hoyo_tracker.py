@@ -1,6 +1,8 @@
 #!/usr/bin/env python3
 """Scrape HoYoverse codes and calendars into stable local artifacts."""
 
+# pylint: disable=too-many-lines
+
 from __future__ import annotations
 
 import argparse
@@ -13,7 +15,7 @@ from dataclasses import asdict, dataclass
 from datetime import datetime, timezone
 from html import unescape
 from pathlib import Path
-from typing import Any
+from typing import Any, Callable, cast
 from urllib.error import HTTPError, URLError
 from urllib.parse import quote_plus
 from urllib.request import Request, urlopen
@@ -200,12 +202,18 @@ def parse_include(value: str) -> str:
     }
     resolved = aliases.get(normalized, normalized)
     if resolved not in {"all", "codes", "events", "banners", "challenges"}:
-        raise ValueError("Expected include mode to be one of: all, codes, events, banners, challenges")
+        raise ValueError(
+            "Expected include mode to be one of: "
+            "all, codes, events, banners, challenges"
+        )
     return resolved
 
 
 def parse_args() -> argparse.Namespace:
-    env_games = env_value("GAMES", ",".join(DEFAULT_GAMES)) or ",".join(DEFAULT_GAMES)
+    env_games = (
+        env_value("GAMES", ",".join(DEFAULT_GAMES))
+        or ",".join(DEFAULT_GAMES)
+    )
     env_timezone = env_value("TIMEZONE", DEFAULT_TIMEZONE) or DEFAULT_TIMEZONE
     env_include = env_value("INCLUDE", DEFAULT_INCLUDE) or DEFAULT_INCLUDE
 
@@ -213,12 +221,18 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument(
         "--games",
         default=env_games,
-        help=f"Comma-separated games to scrape. Supported: {', '.join(sorted(GAME_CONFIG))}. Default: {env_games}.",
+        help=(
+            "Comma-separated games to scrape. Supported: "
+            f"{', '.join(sorted(GAME_CONFIG))}. Default: {env_games}."
+        ),
     )
     parser.add_argument(
         "--include",
         default=env_include,
-        help=f"Which record types to include: all, codes, events, banners, challenges. Default: {env_include}.",
+        help=(
+            "Which record types to include: all, codes, events, banners, "
+            f"challenges. Default: {env_include}."
+        ),
     )
     parser.add_argument(
         "--active-only",
@@ -335,7 +349,11 @@ def normalize_crimson_code(
         "status": status,
         "is_redeemable_now": is_redeemable_now,
         "has_expired": status == "inactive",
-        "expires_in": format_duration((end_at_utc - now_utc).total_seconds()) if end_at_utc is not None else None,
+        "expires_in": (
+            format_duration((end_at_utc - now_utc).total_seconds())
+            if end_at_utc is not None
+            else None
+        ),
         "start_at_utc": iso_or_none(start_at_utc),
         "end_at_utc": iso_or_none(end_at_utc),
         "start_at_output_tz": convert_to_output_tz(start_at_utc, output_tz),
@@ -351,7 +369,6 @@ def normalize_ennead_code(
     game: str,
     record: dict[str, Any],
     ennead_status: str,
-    output_tz: ZoneInfo,
     now_utc: datetime,
 ) -> dict[str, Any]:
     code = str(record.get("code") or "").strip()
@@ -471,7 +488,11 @@ def merge_code_records(
         current["status"] = status
         current["is_redeemable_now"] = is_redeemable_now
         current["has_expired"] = status == "inactive"
-        current["expires_in"] = format_duration((end_at - now_utc).total_seconds()) if end_at is not None else None
+        current["expires_in"] = (
+            format_duration((end_at - now_utc).total_seconds())
+            if end_at is not None
+            else None
+        )
 
     return sorted(
         [record for index, record in enumerate(merged) if index not in removed_indices],
@@ -494,7 +515,11 @@ def normalize_calendar_record(
     start_at_utc = parse_timestamp(record.get("start_time"))
     end_at_utc = parse_timestamp(record.get("end_time"))
     has_expired = end_at_utc <= now_utc if end_at_utc is not None else False
-    expires_in = format_duration((end_at_utc - now_utc).total_seconds()) if end_at_utc is not None else None
+    expires_in = (
+        format_duration((end_at_utc - now_utc).total_seconds())
+        if end_at_utc is not None
+        else None
+    )
 
     payload = {
         "game": game,
@@ -529,7 +554,12 @@ def normalize_calendar_record(
 def filter_code_records(rows: list[dict[str, Any]], active_only: bool) -> list[dict[str, Any]]:
     if not active_only:
         return rows
-    return [row for row in rows if row.get("status") == "active" and row.get("is_redeemable_now") is True]
+    return [
+        row
+        for row in rows
+        if row.get("status") == "active"
+        and row.get("is_redeemable_now") is True
+    ]
 
 
 def filter_calendar_records(rows: list[dict[str, Any]], active_only: bool) -> list[dict[str, Any]]:
@@ -553,7 +583,11 @@ def selected_record_types(include: str) -> set[str]:
     return set(RECORD_TYPES) if include == "all" else {include}
 
 
-def collect_game_data(game: str, output_tz: ZoneInfo, now_utc: datetime) -> dict[str, list[dict[str, Any]]]:
+def collect_game_data(
+    game: str,
+    output_tz: ZoneInfo,
+    now_utc: datetime,
+) -> dict[str, list[dict[str, Any]]]:
     config = GAME_CONFIG[game]
 
     ennead_codes_raw = fetch_json(config["ennead_codes_url"])
@@ -563,7 +597,14 @@ def collect_game_data(game: str, output_tz: ZoneInfo, now_utc: datetime) -> dict
     ennead_codes: list[dict[str, Any]] = []
     for status_name in ("active", "inactive"):
         for record in ennead_codes_raw.get(status_name, []):
-            ennead_codes.append(normalize_ennead_code(game, record, status_name, output_tz, now_utc))
+            ennead_codes.append(
+                normalize_ennead_code(
+                    game,
+                    record,
+                    status_name,
+                    now_utc,
+                )
+            )
 
     crimson_codes = [
         normalize_crimson_code(game, record, output_tz, now_utc)
@@ -572,13 +613,24 @@ def collect_game_data(game: str, output_tz: ZoneInfo, now_utc: datetime) -> dict
     codes = merge_code_records(ennead_codes, crimson_codes, now_utc)
 
     events = sort_calendar_records(
-        [normalize_calendar_record(game, "events", record, output_tz, now_utc) for record in calendar_raw.get("events", [])]
+        [
+            normalize_calendar_record(game, "events", record, output_tz, now_utc)
+            for record in calendar_raw.get("events", [])
+        ]
     )
     banners = sort_calendar_records(
-        [normalize_calendar_record(game, "banners", record, output_tz, now_utc) for record in calendar_raw.get("banners", [])]
+        [
+            normalize_calendar_record(game, "banners", record, output_tz, now_utc)
+            for record in calendar_raw.get("banners", [])
+        ]
     )
     challenges = sort_calendar_records(
-        [normalize_calendar_record(game, "challenges", record, output_tz, now_utc) for record in calendar_raw.get("challenges", [])]
+        [
+            normalize_calendar_record(
+                game, "challenges", record, output_tz, now_utc
+            )
+            for record in calendar_raw.get("challenges", [])
+        ]
     )
 
     return {
@@ -670,7 +722,10 @@ def compute_counts(payload_games: dict[str, dict[str, list[dict[str, Any]]]]) ->
     return counts
 
 
-def write_summary(path: Path, payload: dict[str, Any], unfiltered_games: dict[str, dict[str, list[dict[str, Any]]]]) -> None:
+def write_summary(
+    path: Path,
+    payload: dict[str, Any],
+) -> None:
     lines = [
         "# Hoyo Tracker Scrape Summary",
         "",
@@ -688,7 +743,10 @@ def write_summary(path: Path, payload: dict[str, Any], unfiltered_games: dict[st
         "## Current extraction notes",
         "",
         "- Ennead is used as the primary JSON source for codes and calendars.",
-        "- Crimson Witch is parsed from embedded Next.js flight payload content to enrich code metadata.",
+        (
+            "- Crimson Witch is parsed from embedded Next.js flight payload "
+            "content to enrich code metadata."
+        ),
         "- Code outputs include direct HoYoverse redemption URLs.",
         "- Calendar timestamps are emitted in UTC and the requested output timezone.",
         "",
@@ -708,12 +766,21 @@ def write_summary(path: Path, payload: dict[str, Any], unfiltered_games: dict[st
             inactive = row.get("status") != "active"
             end_at = row.get("end_at_utc") or "9999-12-31T23:59:59+00:00"
             return (1 if inactive else 0, end_at, row.get("code") or "")
-        return (1 if row.get("has_expired") else 0, row.get("end_at_utc") or "9999-12-31T23:59:59+00:00", row.get("name") or "")
+        return (
+            1 if row.get("has_expired") else 0,
+            row.get("end_at_utc") or "9999-12-31T23:59:59+00:00",
+            row.get("name") or "",
+        )
 
     for row in sorted(preview, key=preview_key)[:12]:
         label = row.get("code") if row.get("record_type") == "code" else row.get("name")
         lines.append(
-            f"- [{row.get('game')}] [{row.get('record_type')}] {label} | ends {row.get('end_at_output_tz')} | time left {row.get('expires_in')} | {row.get('redemption_url', row.get('source_url'))}"
+            (
+                f"- [{row.get('game')}] [{row.get('record_type')}] {label} | "
+                f"ends {row.get('end_at_output_tz')} | time left "
+                f"{row.get('expires_in')} | "
+                f"{row.get('redemption_url', row.get('source_url'))}"
+            )
         )
 
     path.write_text("\n".join(lines) + "\n", encoding="utf-8")
@@ -729,7 +796,10 @@ def write_run_outputs(
     write_json(output_dir / "latest.json", payload)
     write_json(output_dir / f"latest_{suffix}.json", payload)
 
-    csv_specs = {
+    csv_specs: dict[
+        str,
+        tuple[list[str], Callable[[dict[str, Any]], dict[str, Any]]],
+    ] = {
         "codes": (
             [
                 "game",
@@ -842,8 +912,15 @@ def write_run_outputs(
         if payload["filters"]["include"] not in {"all", record_type}:
             continue
         rows: list[dict[str, Any]] = []
+        serializer_fn = cast(
+            Callable[[dict[str, Any]], dict[str, Any]],
+            serializer,
+        )
         for game_payload in selected_games.values():
-            rows.extend(serializer(row) for row in game_payload.get(record_type, []))
+            rows.extend(
+                serializer_fn(row)  # pylint: disable=not-callable
+                for row in game_payload.get(record_type, [])
+            )
         write_csv(output_dir / f"{record_type}.csv", rows, fieldnames)
 
 
@@ -871,7 +948,7 @@ def main() -> int:
     except (HTTPError, URLError) as exc:
         print(f"Network error: {exc}", file=sys.stderr)
         return 2
-    except Exception as exc:  # noqa: BLE001
+    except Exception as exc:
         print(f"Extraction error: {exc}", file=sys.stderr)
         return 1
 
@@ -884,7 +961,9 @@ def main() -> int:
                 filtered = filter_code_records(rows, args.active_only)
             else:
                 filtered = filter_calendar_records(rows, args.active_only)
-            selected_games_payload[game][record_type] = filtered if record_type in include_types else []
+            selected_games_payload[game][record_type] = (
+                filtered if record_type in include_types else []
+            )
 
     payload = {
         "scraped_at_utc": now_utc.isoformat(),
@@ -925,16 +1004,26 @@ def main() -> int:
         ),
         notes=[
             "All sources used by this scraper are unofficial community-maintained sources.",
-            "Crimson Witch code metadata is extracted from embedded Next.js flight payload data, not a documented public JSON endpoint.",
-            "Genshin and Star Rail outputs include direct official redemption URLs for each normalized code.",
+            (
+                "Crimson Witch code metadata is extracted from embedded "
+                "Next.js flight payload data, not a documented public JSON "
+                "endpoint."
+            ),
+            (
+                "Genshin and Star Rail outputs include direct official "
+                "redemption URLs for each normalized code."
+            ),
             f"Output timestamps were emitted in UTC and the requested timezone '{args.timezone}'.",
-            "If either source adds stronger bot protection later, a browser-backed fallback may be needed.",
+            (
+                "If either source adds stronger bot protection later, a "
+                "browser-backed fallback may be needed."
+            ),
         ],
     )
 
     write_run_outputs(output_dir, payload, selected_games_payload)
     write_json(output_dir / "provenance.json", asdict(provenance))
-    write_summary(output_dir / "summary.md", payload, unfiltered_games)
+    write_summary(output_dir / "summary.md", payload)
 
     print(f"Wrote scrape artifacts to {output_dir}")
     print(f"Games: {', '.join(games)}")
