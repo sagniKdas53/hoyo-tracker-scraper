@@ -23,6 +23,7 @@ readable plus human-readable artifacts to `output/`.
 
 - `scrape_hoyo_tracker.py`: main scraper
 - `test_scrape_hoyo_tracker.py`: stdlib unit tests for key parsing/merge logic
+- `HERMES_CRON.md`: paste-ready Hermes cron prompts for HoYo plus the shared jobs
 - `output/latest.json`: canonical combined output for downstream use
 - `output/latest_all.json`: most recent unfiltered run
 - `output/latest_active_only.json`: most recent active-only run
