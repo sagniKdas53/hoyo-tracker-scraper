@@ -1,15 +1,15 @@
 # Hoyo Tracker Scrape Summary
 
-- Generated at UTC: 2026-05-02T19:21:15.463220+00:00
+- Generated at UTC: 2026-09-04T07:14:46.048059+00:00
 - Games: genshin, starrail
 - Output timezone: UTC
 - Include mode: all
 - Active-only mode: False
-- Codes: 509
-- Events: 16
-- Banners: 8
-- Challenges: 8
-- Total records: 541
+- Codes: 570
+- Events: 11
+- Banners: 7
+- Challenges: 7
+- Total records: 595
 
 ## Current extraction notes
 
@@ -20,15 +20,15 @@
 
 ## Next items to expire
 
-- [genshin] [event] Heated Battle Mode: Automatic Artistry | ends 2026-05-10T19:59:59+00:00 | time left 8d 0h 38m | https://api.ennead.cc/mihoyo/genshin/calendar
-- [starrail] [challenge] Virtual Made Manifest | ends 2026-05-11T03:00:00+00:00 | time left 8d 7h 38m | https://api.ennead.cc/mihoyo/starrail/calendar
-- [starrail] [banner]  | ends 2026-05-13T10:59:00+00:00 | time left 10d 15h 37m | https://api.ennead.cc/mihoyo/starrail/calendar
-- [starrail] [banner]  | ends 2026-05-13T10:59:00+00:00 | time left 10d 15h 37m | https://api.ennead.cc/mihoyo/starrail/calendar
-- [genshin] [event] Where Waves Meet the Reef | ends 2026-05-13T19:59:59+00:00 | time left 11d 0h 38m | https://api.ennead.cc/mihoyo/genshin/calendar
-- [genshin] [challenge] Abyssal Moon Spire | ends 2026-05-15T19:59:59+00:00 | time left 13d 0h 38m | https://api.ennead.cc/mihoyo/genshin/calendar
-- [starrail] [event] Planar Fissure 300% | ends 2026-05-18T02:59:59+00:00 | time left 15d 7h 38m | https://api.ennead.cc/mihoyo/starrail/calendar
-- [genshin] [event] Stygian Onslaught | ends 2026-05-18T19:59:59+00:00 | time left 16d 0h 38m | https://api.ennead.cc/mihoyo/genshin/calendar
-- [genshin] [banner] Character Event Wish | ends 2026-05-19T06:59:59+00:00 | time left 16d 11h 38m | https://api.ennead.cc/mihoyo/genshin/calendar
-- [genshin] [banner] Character Event Wish 2 | ends 2026-05-19T06:59:59+00:00 | time left 16d 11h 38m | https://api.ennead.cc/mihoyo/genshin/calendar
-- [genshin] [banner] Chronicled Wish | ends 2026-05-19T06:59:59+00:00 | time left 16d 11h 38m | https://api.ennead.cc/mihoyo/genshin/calendar
-- [genshin] [banner] Weapon Event Wish | ends 2026-05-19T06:59:59+00:00 | time left 16d 11h 38m | https://api.ennead.cc/mihoyo/genshin/calendar
+- [starrail] [banner]  | ends 2026-09-12T10:59:00+00:00 | time left 8d 3h 44m | https://api.ennead.cc/mihoyo/starrail/calendar
+- [starrail] [banner]  | ends 2026-09-12T10:59:00+00:00 | time left 8d 3h 44m | https://api.ennead.cc/mihoyo/starrail/calendar
+- [genshin] [event] Great Expeditionist Challenge | ends 2026-09-13T19:59:59+00:00 | time left 9d 12h 45m | https://api.ennead.cc/mihoyo/genshin/calendar
+- [genshin] [event] Heated Battle Mode: Tactical Formation | ends 2026-09-13T19:59:59+00:00 | time left 9d 12h 45m | https://api.ennead.cc/mihoyo/genshin/calendar
+- [starrail] [challenge] Fabricated Business | ends 2026-09-14T03:00:00+00:00 | time left 9d 19h 45m | https://api.ennead.cc/mihoyo/starrail/calendar
+- [genshin] [challenge] Abyssal Moon Spire | ends 2026-09-15T19:59:59+00:00 | time left 11d 12h 45m | https://api.ennead.cc/mihoyo/genshin/calendar
+- [starrail] [event] Planar Fissure | ends 2026-09-21T02:59:59+00:00 | time left 16d 19h 45m | https://api.ennead.cc/mihoyo/starrail/calendar
+- [genshin] [event] Stygian Onslaught | ends 2026-09-21T19:59:59+00:00 | time left 17d 12h 45m | https://api.ennead.cc/mihoyo/genshin/calendar
+- [genshin] [banner] Character Event Wish | ends 2026-09-22T06:59:59+00:00 | time left 17d 23h 45m | https://api.ennead.cc/mihoyo/genshin/calendar
+- [genshin] [banner] Character Event Wish 2 | ends 2026-09-22T06:59:59+00:00 | time left 17d 23h 45m | https://api.ennead.cc/mihoyo/genshin/calendar
+- [genshin] [banner] Weapon Event Wish | ends 2026-09-22T06:59:59+00:00 | time left 17d 23h 45m | https://api.ennead.cc/mihoyo/genshin/calendar
+- [genshin] [event] The Forge Realm's Temper: Game of Wits | ends 2026-09-22T23:00:00+00:00 | time left 18d 15h 45m | https://api.ennead.cc/mihoyo/genshin/calendar
